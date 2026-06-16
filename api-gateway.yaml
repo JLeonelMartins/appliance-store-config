@@ -1,6 +1,12 @@
-spring:
-  application:
-    name: api-gateway
+server:
+  port: ${SERVER_PORT:8088}
 
-  config:
-    import: "configserver:${CONFIG_SERVER_URL:http://localhost:8888}"
+spring:
+  cloud:
+    gateway:
+      server:
+        webflux:
+          discovery:
+            locator:
+              enabled: true
+              lower-case-service-id: true
