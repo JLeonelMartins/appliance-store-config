@@ -6,7 +6,10 @@ spring:
     gateway:
       server:
         webflux:
-          discovery:
-            locator:
-              enabled: true
-              lower-case-service-id: true
+          routes:
+            - id: product-route
+              uri: lb://product
+              predicates:
+                - Path=/product/**
+              filters:
+                - StripPrefix=1
