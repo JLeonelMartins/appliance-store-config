@@ -5,7 +5,7 @@ spring:
   cloud:
     gateway:
       server:
-        webflux:
+        webmvc:
           routes:
             - id: product-route
               uri: lb://product
