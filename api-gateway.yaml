@@ -13,3 +13,10 @@ spring:
                 - Path=/product/**
               filters:
                 - StripPrefix=1
+
+            - id: cart-route
+              uri: lb://cart
+              predicates:
+                - Path=/cart/**
+              filters:
+                - StripPrefix=1
