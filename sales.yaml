@@ -14,3 +14,61 @@ spring:
     properties:
       hibernate:
         format_sql: true
+
+  cloud:
+    circuitbreaker:
+      resilience4j:
+        disable-time-limiter: true
+
+resilience4j:
+  circuitbreaker:
+    instances:
+      cartService:
+        register-health-indicator: true
+        event-consumer-buffer-size: 20
+
+        sliding-window-type: COUNT_BASED
+        sliding-window-size: 5
+        minimum-number-of-calls: 3
+        failure-rate-threshold: 50
+
+        wait-duration-in-open-state: 10s
+        permitted-number-of-calls-in-half-open-state: 2
+        automatic-transition-from-open-to-half-open-enabled: true
+
+        ignore-exceptions:
+          - com.martins.jonathan.appliancestore.sales.exception.CartNotFoundException
+
+  retry:
+    instances:
+      cartServiceRetry:
+        max-attempts: 3
+        wait-duration: 500ms
+        event-consumer-buffer-size: 20
+
+        retry-exceptions:
+          - feign.FeignException
+
+        ignore-exceptions:
+          - com.martins.jonathan.appliancestore.sales.exception.CartNotFoundException
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include:
+          - health
+          - info
+          - metrics
+          - circuitbreakers
+          - circuitbreakerevents
+          - retries
+          - retryevents
+
+  endpoint:
+    health:
+      show-details: always
+
+  health:
+    circuitbreakers:
+      enabled: true
